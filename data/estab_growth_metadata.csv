@@ -1,0 +1,26 @@
+Metadata for estab_growth_exp_2023.csv,
+,
+,
+Value,Explanation
+D,Dead plant
+MV,Missing value
+,
+Variables,Explanation
+Date_2023,Date of harvest
+Age_days,Age of plants at harvest [days]
+Injury,Removal treatment (Y/N)
+Clonality,Clonality of a species (clon/non-clon)
+Spec,Species name
+CGO,Clonal growth organ type
+Removed_AB,Removed aboveground biomass [g]
+SLA,Specific leaf area [cm2/g]
+LDMC,Leaf dry matter content
+SRL,Specific root lenght [m/g]
+RDMC,Fine root dry matter content
+Root_diameter,Average diameter fine root sken [mm]
+BB,Belowground biomass [g]
+AB,Aboveground biomass [g]
+Flowering,Flowering (Y/N)
+N_roots,N in dry biomass of fine roots [%] (includes combined samples)
+C_roots,C in dry biomass of fine roots [%] (includes combined samples)
+N_leaves,N in dry biomass of leaves [%] (includes combined samples)
