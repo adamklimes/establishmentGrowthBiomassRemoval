@@ -46,35 +46,49 @@ plotChull <- function(x, col = "black", lty = 1) {
 
 pca <- rda(datspA)
 
-datg <- apply(scores(pca)$sites, 2, tapply, rep(clon, each = 9) + 1:9*2, mean)
-expVar <- round(pca$CA$eig / sum(pca$CA$eig), 3) * 100
-# cols <- c("orange", "purple")
 cols <- c("black", "red")
+plotPCA <- function(pca, mai = c(0.9,0.8,0.1,0.1), main = "", pos = c(3,2,4,4)){
+  datg <- apply(scores(pca)$sites, 2, tapply, rep(clon, each = 9) + 1:9*2, mean)
+  expVar <- round(pca$CA$eig / sum(pca$CA$eig), 3) * 100
+
+  par(mai = mai)
+  biplot(pca, display = "sp", type = "n", xlab = paste0("PCA1 (", expVar[1], "%)"), ylab = paste0("PCA2 (", expVar[2], "%)"), main = main)
+  arrows(0, 0, x1 = scores(pca)$species[, 1], y1 = scores(pca)$species[, 2], length = 0.1, col = "blue")
+  plotChull(scores(pca)$sites[1:20*9-8, ][clon == 0, ], col = cols[1])
+  plotChull(scores(pca)$sites[1:20*9-8, ][clon == 1, ], col = cols[2])
+  plotChull(scores(pca)$sites[1:20*9-1, ][clon == 0, ], col = cols[1])
+  plotChull(scores(pca)$sites[1:20*9-1, ][clon == 1, ], col = cols[2])
+  plotChull(scores(pca)$sites[1:20*9, ][clon == 0, ], lty = 2, col = cols[1])
+  plotChull(scores(pca)$sites[1:20*9, ][clon == 1, ], col = cols[2], lty = 2)
+
+  lines(datg[1:8*2, ], col = cols[2], lwd = 3)
+  points(datg[16, 1], datg[16, 2], col = cols[2], pch = 16, cex = 1)
+  text(datg[2, 1], datg[2, 2], "30 days", pos = pos[2], cex = 0.8, col = cols[2])
+  text(datg[16, 1], datg[16, 2], "115 days", pos = pos[4], cex = 0.8, col = cols[2])
+  lines(datg[1:8*2-1, ], lwd = 3, col = cols[1])
+  points(datg[15, 1], datg[15, 2], pch = 16, cex = 1, col = cols[1])
+  text(datg[1, 1], datg[1, 2], "30 days", pos = pos[1], cex = 0.8, col = cols[1])
+  text(datg[15, 1], datg[15, 2], "115 days", pos = pos[3], cex = 0.8, col = cols[1])
+  points(datg[18, 1], datg[18, 2], col = cols[2], pch = 8, cex = 1.3)
+  text(datg[18, 1], datg[18, 2], "Removal", pos = 2, cex = 0.8, col = cols[2])
+  points(datg[17, 1], datg[17, 2], col = cols[1], pch = 8, cex = 1.3)
+  text(datg[17, 1], datg[17, 2], "Removal", pos = 2, cex = 0.8, col = cols[1])
+  legend("topleft", lwd = 3, col = cols, legend = c("Non-clonal", "Clonal"), bty = "n")
+}
+
 
 # fig 1
 # png("figures/Fig1_ordination.png", width = 480*13, height = 480*9, res = 720)
-par(mai = c(0.9,0.8,0.1,0.1))
-biplot(pca, display = "sp", type = "n", xlab = paste0("PCA1 (", expVar[1], "%)"), ylab = paste0("PCA2 (", expVar[2], "%)"))
-arrows(0, 0, x1 = scores(pca)$species[, 1], y1 = scores(pca)$species[, 2], length = 0.1, col = "blue")
+plotPCA(pca)
 text(scores(pca)$species[, 1], scores(pca)$species[, 2], c("SLA", "LDMC", "SRL", "RDMC", "Root diameter", "Belowground biomass", "Aboveground biomass", "N roots", "C roots", "N leaves", "Flowering"), col = "blue", cex = 0.8, pos = c(1,3,2,4,4,3,1,1,4,2,4))
-plotChull(scores(pca)$sites[1:20*9-8, ][clon == 0, ], col = cols[1])
-plotChull(scores(pca)$sites[1:20*9-8, ][clon == 1, ], col = cols[2])
-plotChull(scores(pca)$sites[1:20*9-1, ][clon == 0, ], col = cols[1])
-plotChull(scores(pca)$sites[1:20*9-1, ][clon == 1, ], col = cols[2])
-plotChull(scores(pca)$sites[1:20*9, ][clon == 0, ], lty = 2, col = cols[1])
-plotChull(scores(pca)$sites[1:20*9, ][clon == 1, ], col = cols[2], lty = 2)
 
-lines(datg[1:8*2, ], col = cols[2], lwd = 3)
-points(datg[16, 1], datg[16, 2], col = cols[2], pch = 16, cex = 1)
-text(datg[2, 1], datg[2, 2], "30 days", pos = 2, cex = 0.8, col = cols[2])
-text(datg[16, 1], datg[16, 2], "115 days", pos = 4, cex = 0.8, col = cols[2])
-lines(datg[1:8*2-1, ], lwd = 3, col = cols[1])
-points(datg[15, 1], datg[15, 2], pch = 16, cex = 1, col = cols[1])
-text(datg[1, 1], datg[1, 2], "30 days", pos = 3, cex = 0.8, col = cols[1])
-text(datg[15, 1], datg[15, 2], "115 days", pos = 4, cex = 0.8, col = cols[1])
-points(datg[18, 1], datg[18, 2], col = cols[2], pch = 8, cex = 1.3)
-text(datg[18, 1], datg[18, 2], "Removal", pos = 2, cex = 0.8, col = cols[2])
-points(datg[17, 1], datg[17, 2], col = cols[1], pch = 8, cex = 1.3)
-text(datg[17, 1], datg[17, 2], "Removal", pos = 2, cex = 0.8, col = cols[1])
-legend("topleft", lwd = 3, col = cols, legend = c("Non-clonal", "Clonal"), bty = "n")
+# PCA without inputed values
+pca2 <- rda(datspA[, colnames(datspA) != "C_roots"])
+
+# png("figures/FigS1_compareOrd.png", width = 480*28, height = 480*10, res = 72*13)
+par(mfrow = c(1,2))
+plotPCA(pca, mai = c(0.9,0.8,0.3,0.1), main = "All traits")
+text(scores(pca)$species[, 1], scores(pca)$species[, 2], c("SLA", "LDMC", "SRL", "RDMC", "Root diameter", "Belowground biomass", "Aboveground biomass", "N roots", "C roots", "N leaves", "Flowering"), col = "blue", cex = 0.8, pos = c(1,3,2,4,4,3,1,1,4,2,4))
+plotPCA(pca2, mai = c(0.9,0.8,0.3,0.1), main = "Without C roots", pos = c(2,3,1,4))
+text(scores(pca2)$species[, 1], scores(pca2)$species[, 2], c("SLA", "LDMC", "SRL", "RDMC", "Root diameter", "Belowground biomass", "Aboveground biomass", "N roots", "N leaves", "Flowering"), col = "blue", cex = 0.8, pos = c(1,1,2,4,4,3,1,2,2,4))
 #_
